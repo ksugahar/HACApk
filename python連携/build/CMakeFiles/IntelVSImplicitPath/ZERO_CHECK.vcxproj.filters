@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\wawat\Desktop\2023, 24年度 研究, 授業, 就活\01_CAE+Programing\03_Python\Fortran連携\2024_04_19_Biot-Savart HACApk_dll\python連携\build\CMakeFiles\IntelVSImplicitPath\CMakeFiles\7a48667dc25418b81a8ce6c61f9b46de\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{DE0CBC22-2D79-323C-B5F1-5ED652C1A8D0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

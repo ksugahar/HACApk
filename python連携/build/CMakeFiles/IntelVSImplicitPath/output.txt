@@ -1,0 +1,20 @@
+Change Dir: C:/Users/wawat/Desktop/2023, 24年度 研究, 授業, 就活/01_CAE+Programing/03_Python/Fortran連携/2024_04_19_Biot-Savart HACApk_dll/python連携/build/CMakeFiles/IntelVSImplicitPath
+
+Run Build Command(s):C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.com IntelFortranImplicit.sln /build Debug /project ALL_BUILD && 
+Microsoft Visual Studio 2022 Version 17.7.6.
+Copyright (C) Microsoft Corp. All rights reserved.
+ビルドを開始しました...
+1>------ ビルド開始: プロジェクト: ZERO_CHECK, 構成: Debug x64 ------
+1>Checking Build System
+2>------ ビルド開始: プロジェクト: FortranLib, 構成: Debug x64 ------
+Generating output.cmake
+'C:\Users\wawat\Desktop\2023' は、内部コマンドまたは外部コマンド、
+操作可能なプログラムまたはバッチ ファイルとして認識されていません。
+FortranLib : error PRJ0019: A tool returned an error code
+Build log written to  "file://C:/Users/wawat/Desktop/2023,%2024年度%20研究,%20授業,%20就活/01_CAE+Programing/03_Python/Fortran連携/2024_04_19_Biot-Savart%20HACApk_dll/python連携/build/CMakeFiles/IntelVSImplicitPath/FortranLib.dir/Debug/BuildLog.htm"
+FortranLib - 1 error(s), 0 warning(s)
+3>------ ビルド開始: プロジェクト: ALL_BUILD, 構成: Debug x64 ------
+3>Building Custom Rule C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/share/cmake-3.26/Modules/IntelVSImplicitPath/CMakeLists.txt
+========== ビルド: 成功 2、失敗 1、最新の状態 0、スキップ 0 ==========
+========== ビルド は 15:35 に開始され、01.028 秒 かかりました ==========
+
