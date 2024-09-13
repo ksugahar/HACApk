@@ -1,1 +1,0 @@
-mklink /d "c:\Program Files (x86)\Intel\oneAPI\compiler\latest" "c:\Program Files (x86)\Intel\oneAPI\compiler\2024.1"

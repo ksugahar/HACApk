@@ -23,8 +23,9 @@ public :: HACApK_entry_ij
 contains
 !***HACApK_entry_ij
 	real*8 function HACApK_entry_ij(i,j,zbemv)
+	integer*4 :: i, j
 	type(st_HACApK_calc_entry) :: zbemv
-	HACApK_entry_ij=loop_Biot_Savart(i,j,zbemv)
+	HACApK_entry_ij = loop_Biot_Savart(i,j,zbemv)
 end function HACApK_entry_ij
 
 	real*8 function loop_Biot_Savart(i, j,zbemv)
