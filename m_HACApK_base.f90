@@ -34,85 +34,85 @@
 !C**************************************************************************
 module m_HACApK_base
 	use m_HACApK_calc_entry_ij
-	implicit real*8(a-h,o-z)
-	implicit integer*4(i-n)
+	implicit real(kind=8)(a-h,o-z)
+	implicit integer(kind=4)(i-n)
 	integer omp_get_thread_num, omp_get_num_threads
 	external omp_get_thread_num, omp_get_num_threads
 
 !*** type :: st_HACApK_cluster
 	type :: st_HACApK_cluster
-		integer*4 ndim
-		integer*4 nstrt,nsize,ndpth,nnson,nmbr
-		integer*4 ndscd ! number of descendants
-		real*8,pointer :: bmin(:)=>null() ! Bounding box
-		real*8,pointer :: bmax(:)=>null()
-		real*8 :: zwdth
+		integer(kind=4) ndim
+		integer(kind=4) nstrt,nsize,ndpth,nnson,nmbr
+		integer(kind=4) ndscd ! number of descendants
+		real(kind=8),pointer :: bmin(:)=>null() ! Bounding box
+		real(kind=8),pointer :: bmax(:)=>null()
+		real(kind=8) :: zwdth
 		type(st_HACApK_cluster),pointer :: pc_sons(:)=>null()
 	end type st_HACApK_cluster 
 
 !*** type :: st_HACApK_leafmtx
 	type :: st_HACApK_leafmtx
-		integer*4 ltmtx	! kind of the matrix; 1:rk 2:full
-		integer*4 kt
-		integer*4 nstrtl,ndl;
-		integer*4 nstrtt,ndt;
-		real*8,pointer :: a1(:,:)=>null(),a2(:,:)=>null()
+		integer(kind=4) ltmtx	! kind of the matrix; 1:rk 2:full
+		integer(kind=4) kt
+		integer(kind=4) nstrtl,ndl;
+		integer(kind=4) nstrtt,ndt;
+		real(kind=8),pointer :: a1(:,:)=>null(),a2(:,:)=>null()
 
-		integer*4 nlf ! number of leaves(sub-matrices) in the MPI process
+		integer(kind=4) nlf ! number of leaves(sub-matrices) in the MPI process
 		type(st_HACApK_leafmtx),pointer :: st_lf(:)=>null()
 	end type st_HACApK_leafmtx
 
 !*** type :: st_HACApK_leafmtxp
 	type :: st_HACApK_leafmtxp
-		integer*4 nd ! number of unknowns of whole matrix
-		integer*4 nlf ! number of leaves(sub-matrices) in the MPI process
-		integer*4 nlfkt ! number of low-rank sub matrices in the MPI process
-		integer*4 ktmax
-		integer*4 nbl !number of blocks for MPI assignment
-		integer*4 nlfalt !number of leaves in row(column) of whole matrix
-		integer*4 nlfl,nlft	! number of leaves in row and column in the MPI process
-		integer*4 ndlfs,ndtfs	! vector sizes in the MPI process
+		integer(kind=4) nd ! number of unknowns of whole matrix
+		integer(kind=4) nlf ! number of leaves(sub-matrices) in the MPI process
+		integer(kind=4) nlfkt ! number of low-rank sub matrices in the MPI process
+		integer(kind=4) ktmax
+		integer(kind=4) nbl !number of blocks for MPI assignment
+		integer(kind=4) nlfalt !number of leaves in row(column) of whole matrix
+		integer(kind=4) nlfl,nlft	! number of leaves in row and column in the MPI process
+		integer(kind=4) ndlfs,ndtfs	! vector sizes in the MPI process
 		type(st_HACApK_leafmtx),pointer :: st_lf(:)=>null()
 		integer*8,pointer :: lnlfl2g(:,:)=>null()
-		integer*4,pointer :: lbstrtl(:)=>null(),lbstrtt(:)=>null()! Start points of each block in row and column
-		integer*4,pointer :: lbndl(:)=>null(),lbndt(:)=>null()! vector sizes of each block in row and column
-		integer*4,pointer :: lbndlfs(:)=>null(),lbndtfs(:)=>null()! vector sizes of each MPI process in row and column
-		integer*4,pointer :: lbl2t(:)=>null() ! bit vector for recieving data on each MPI process
+		integer(kind=4),pointer :: lbstrtl(:)=>null(),lbstrtt(:)=>null()! Start points of each block in row and column
+		integer(kind=4),pointer :: lbndl(:)=>null(),lbndt(:)=>null()! vector sizes of each block in row and column
+		integer(kind=4),pointer :: lbndlfs(:)=>null(),lbndtfs(:)=>null()! vector sizes of each MPI process in row and column
+		integer(kind=4),pointer :: lbl2t(:)=>null() ! bit vector for recieving data on each MPI process
 	end type st_HACApK_leafmtxp
 
 !*** type :: st_HACApK_lcontrol
 	type :: st_HACApK_lcontrol
-		integer*4,pointer :: lod(:)=>null(),lsp(:)=>null(),lnp(:)=>null(),lthr(:)=>null(),lpmd(:)=>null()
-		real*8,	 pointer :: param(:)=>null(), time(:)=>null()
+		integer(kind=4),pointer :: lod(:)=>null(),lsp(:)=>null(),lnp(:)=>null(),lthr(:)=>null(),lpmd(:)=>null()
+		real(kind=8),	 pointer :: param(:)=>null(), time(:)=>null()
 		integer :: lf_umpi
 	end type st_HACApK_lcontrol
 
 interface
-	real*8 function HACApK_unrm_d(nd,za)
-		implicit real*8(a-h,o-z)
-		real*8 :: za(:)
+	real(kind=8) function HACApK_unrm_d(nd,za)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) :: za(:)
 	end function
 
 	subroutine HACApK_adotsub_dsm(zr,zaa,zu,ndl,ndt,mdl)
-		implicit real*8(a-h,o-z)
-		real*8 :: zaa(:,:)
-		real*8 :: zu(:),zr(:)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) :: zaa(:,:)
+		real(kind=8) :: zu(:),zr(:)
 	end subroutine 
 
 	subroutine HACApK_maxabsvalloc_d(za,zz,il,nd)
-		implicit real*8(a-h,o-z)
-		real*8 :: za(:)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) :: za(:)
 	endsubroutine 
 
 	subroutine HACApK_maxabsvallocm_d(za,zz,il,nd,lmask)
-		implicit real*8(a-h,o-z)
-		real*8 :: za(:)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) :: za(:)
 		integer lmask(:)
 	endsubroutine 
 
 	subroutine HACApK_minabsvalloc_d(za,zz,il,nd)
-		implicit real*8(a-h,o-z)
-		real*8 za(:)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) za(:)
 	end subroutine 
 
 	integer function HACApK_med3(nl,nr,nlr2)
@@ -124,7 +124,7 @@ contains
 !***HACApK_init
 integer function HACApK_init(nd,st_ctl,st_bemv,icomma)
 	use mpi
-	implicit real*8(a-h,o-z)
+	implicit real(kind=8)(a-h,o-z)
 !	include 'mpif.h'
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_lcontrol) :: st_ctl
@@ -218,7 +218,7 @@ endfunction
 !***HACApK_finalize
 integer function HACApK_finalize(st_ctl)
 	use mpi
-	implicit real*8(a-h,o-z)
+	implicit real(kind=8)(a-h,o-z)
 !	include 'mpif.h'
 	type(st_HACApK_lcontrol) :: st_ctl
 	if(st_ctl%param(1)>0) close(st_ctl%lpmd(4))
@@ -246,12 +246,12 @@ subroutine HACApK_generate_frame_blrleaf(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,n
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_leafmtx),dimension(:), allocatable :: st_leafmtx,st_leafmtx_lcl
-	real*8 :: gmid(nofc,ndim)
+	real(kind=8) :: gmid(nofc,ndim)
 	integer*8 :: mem8,nlfall
-	integer*4 :: lnmtx(4)
+	integer(kind=4) :: lnmtx(4)
 	integer, dimension(:), allocatable :: lhp, lnp
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,e15.7)/)
 	param => st_ctl%param(:)
@@ -505,12 +505,12 @@ subroutine HACApK_generate_frame_blrmtx(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,no
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_leafmtx),dimension(:), allocatable :: st_leafmtx
-	real*8 :: gmid(nofc,ndim)
+	real(kind=8) :: gmid(nofc,ndim)
 	integer*8 :: mem8,nlfall
-	integer*4 :: lnmtx(3)
+	integer(kind=4) :: lnmtx(3)
 	integer, dimension(:), allocatable :: lhp, lnp
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,e15.7)/)
 	
@@ -738,12 +738,12 @@ subroutine HACApK_generate_frame_leafmtx_(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_leafmtx),dimension(:), allocatable :: st_leafmtx
-	real*8 :: gmid(nofc,ndim)
+	real(kind=8) :: gmid(nofc,ndim)
 	integer*8 :: mem8
-	integer*4 :: lnmtx(3)
+	integer(kind=4) :: lnmtx(3)
 	integer, dimension(:), allocatable :: lhp, lnp
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,e15.7)/)
 
@@ -886,12 +886,12 @@ subroutine HACApK_generate_frame_leafmtx(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,n
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_leafmtx),dimension(:), allocatable :: st_leafmtx
-	real*8 :: gmid(nofc,ndim)
+	real(kind=8) :: gmid(nofc,ndim)
 	integer*8 :: mem8
-	integer*4 :: lnmtx(3)
+	integer(kind=4) :: lnmtx(3)
 	integer, dimension(:), allocatable :: lhp, lnp
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:),lod(:),lthr(:),lodfc(:)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,e15.7)/)
 
@@ -1092,7 +1092,7 @@ end subroutine HACApK_setcutthread
 subroutine HACApK_accuracy_leafmtx_body(zhnrm,zanrm,st_leafmtxp,st_bemv,lodl,lodt,lpmd,nofc,nffc)
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_calc_entry) :: st_bemv
-	integer*4 :: lodl(nofc*nffc),lodt(nofc*nffc),lpmd(*)
+	integer(kind=4) :: lodl(nofc*nffc),lodt(nofc*nffc),lpmd(*)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,1pe15.7)/)
 	mpinr=lpmd(3); mpilog=lpmd(4); nrank=lpmd(2); icomm=lpmd(1)
@@ -1132,7 +1132,7 @@ subroutine HACApK_accuracy_leafmtx(st_leafmtxp,st_bemv,st_ctl,lodl,lodt,lpmd,nof
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_lcontrol) :: st_ctl
-	integer*4 :: lodl(nofc*nffc),lodt(nofc*nffc),lpmd(*)
+	integer(kind=4) :: lodl(nofc*nffc),lodt(nofc*nffc),lpmd(*)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,1pe15.8)/)
 	3000 format(a,i12,5(a,1pe15.8)/)
@@ -1163,10 +1163,10 @@ end subroutine HACApK_accuracy_leafmtx
 ! ld==0: row direction, ld==1: column direction
 subroutine HACApK_calc_vec(zaa, zab, ndp, k, ip, vec, nstrtl, nstrtt,lod, st_bemv, lmsk, ld)
 	type(st_HACApK_calc_entry) :: st_bemv
-	real*8,target :: zab(:,:)
-	real*8 :: vec(:),zaa(:,:)
-	real*8,pointer :: zz(:)
-	integer*4 :: lmsk(:),lod(:)
+	real(kind=8),target :: zab(:,:)
+	real(kind=8) :: vec(:),zaa(:,:)
+	real(kind=8),pointer :: zz(:)
+	integer(kind=4) :: lmsk(:),lod(:)
 
 	do ii=1,ndp
 		if(lmsk(ii)==0) then
@@ -1187,11 +1187,11 @@ endsubroutine
 !***HACApK_aca
 integer function HACApK_aca(zaa,zab,param,ndl,ndt,nstrtl,nstrtt,lod,st_bemv,kmax,eps,znrmmat,pACA_EPS)
 	type(st_HACApK_calc_entry) :: st_bemv
-	real*8 :: param(:)
-	real*8,target :: zaa(ndl,kmax),zab(ndt,kmax)
-	real*8,pointer :: prow(:),pcol(:)
-	integer*4 :: lod(:)
-	integer*4,dimension(:), allocatable :: lrow_msk,lcol_msk
+	real(kind=8) :: param(:)
+	real(kind=8),target :: zaa(ndl,kmax),zab(ndt,kmax)
+	real(kind=8),pointer :: prow(:),pcol(:)
+	integer(kind=4) :: lod(:)
+	integer(kind=4),dimension(:), allocatable :: lrow_msk,lcol_msk
 	1000 format(5(a,i12)/)
 	2000 format(5(a,1pe15.8)/)
 	
@@ -1273,12 +1273,12 @@ integer function HACApK_aca(zaa,zab,param,ndl,ndt,nstrtl,nstrtt,lod,st_bemv,kmax
 !***HACApK_acaplus
 	integer function HACApK_acaplus(zaa,zab,param,ndl,ndt,nstrtl,nstrtt,lod,st_bemv,kmax,eps,znrmmat,pACA_EPS)
 	type(st_HACApK_calc_entry) :: st_bemv
-	real*8 :: param(:)
-	real*8,target :: zaa(ndl,kmax),zab(ndt,kmax)
-	integer*4 :: lod(:)
-	integer*4,dimension(:), allocatable :: lrow_msk,lcol_msk
-	real*8,dimension(:), allocatable :: pa_ref, pb_ref
-	real*8,pointer :: prow(:),pcol(:)
+	real(kind=8) :: param(:)
+	real(kind=8),target :: zaa(ndl,kmax),zab(ndt,kmax)
+	integer(kind=4) :: lod(:)
+	integer(kind=4),dimension(:), allocatable :: lrow_msk,lcol_msk
+	real(kind=8),dimension(:), allocatable :: pa_ref, pb_ref
+	real(kind=8),pointer :: prow(:),pcol(:)
 	1000 format(5(a,i12)/)
 	2000 format(5(a,1pe15.8)/)
 
@@ -1476,9 +1476,9 @@ subroutine HACApK_fill_leafmtx_hyp(st_lf,st_bemv,param,znrmmat,lpmd,lnmtx,lodl,l
 !	type(st_HACApK_leafmtxp) ::	st_leafmtxp
 	type(st_HACApK_leafmtx) :: st_lf(:)
 	type(st_HACApK_calc_entry) :: st_bemv
-	real*8 ::param(:)
-	integer*4 :: lodl(nd),lodt(nd),lpmd(:),lnmtx(:),lthr(0:)
-	real*8, allocatable :: zab(:,:),zaa(:,:)
+	real(kind=8) ::param(:)
+	integer(kind=4) :: lodl(nd),lodt(nd),lpmd(:),lnmtx(:),lthr(0:)
+	real(kind=8), allocatable :: zab(:,:),zaa(:,:)
 	1000 format(5(a,i12)/)
 	mpinr=lpmd(3); mpilog=lpmd(4); nrank=lpmd(2); icomm=lpmd(1)
 	eps=param(71); ACA_EPS=param(72)*eps; kparam=param(63)
@@ -1572,10 +1572,10 @@ end subroutine HACApK_fill_leafmtx_hyp
 RECURSIVE subroutine HACApK_fill_leafmtx(st_lf,st_bemv,param,znrmmat,lpmd,lnmtx,lodl,lodt,nd,nlf,lnps,lnpe)
 	type(st_HACApK_leafmtx) ::	st_lf(:)
 	type(st_HACApK_calc_entry) :: st_bemv
-	real*8 ::param(:)
-	integer*4 :: lodl(nd),lodt(nd),lpmd(:),lnmtx(:)
-	real*8,pointer :: zab(:,:),zaa(:,:)
-	integer*4,dimension(:),allocatable :: lodc
+	real(kind=8) ::param(:)
+	integer(kind=4) :: lodl(nd),lodt(nd),lpmd(:),lnmtx(:)
+	real(kind=8),pointer :: zab(:,:),zaa(:,:)
+	integer(kind=4),dimension(:),allocatable :: lodc
 	1000 format(5(a,i12)/)
 	eps=param(71); ACA_EPS=param(72)*eps; kparam=param(63)
 	ndnr_s=lpmd(6); ndnr_e=lpmd(7); ndnr=lpmd(5); mpinr=lpmd(3)
@@ -1630,8 +1630,8 @@ subroutine HACApK_chk_leafmtx(st_leafmtxp,st_ctl,lnmtx,nd,mem8)
 	type(st_HACApK_lcontrol) :: st_ctl
 	integer :: lnmtx(:)
 	integer*8 :: mem8,memh
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:)
 	1000 format(5(a,i10))
 	2000 format(5(a,f12.2))
 
@@ -1696,8 +1696,8 @@ subroutine HACApK_chk_blrmtx(st_leafmtxp,st_ctl,lnmtx,nd,mem8)
 	type(st_HACApK_lcontrol) :: st_ctl
 	integer :: lnmtx(:)
 	integer*8 :: mem8,memh
-	real*8,pointer :: param(:)
-	integer*4,pointer :: lpmd(:)
+	real(kind=8),pointer :: param(:)
+	integer(kind=4),pointer :: lpmd(:)
 	1000 format(5(a,i10))
 	2000 format(5(a,f12.2))
 
@@ -1767,8 +1767,8 @@ end subroutine HACApK_chk_blrmtx
 !***HACApK_count_blrnmb
 RECURSIVE subroutine HACApK_count_blrnmb(st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -1808,8 +1808,8 @@ end subroutine HACApK_count_blrnmb
 RECURSIVE subroutine HACApK_count_blrleaf(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(:)
-	integer*4 :: lnmtx(:),lpmd(*),lnmtx2(3)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*),lnmtx2(3)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -1883,8 +1883,8 @@ end subroutine HACApK_count_blrleaf
 RECURSIVE subroutine HACApK_generate_blrleaf(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,nlf,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(*)
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
@@ -1959,8 +1959,8 @@ end subroutine HACApK_generate_blrleaf
 !***HACApK_count_blr
 RECURSIVE subroutine HACApK_count_blr(st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -2019,8 +2019,8 @@ end subroutine HACApK_count_blr
 RECURSIVE subroutine HACApK_generate_blr(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,nlf,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(*)
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
@@ -2088,8 +2088,8 @@ end subroutine HACApK_generate_blr
 !***HACApK_count_zlntmx
 RECURSIVE subroutine HACApK_count_zlntmx(st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -2152,8 +2152,8 @@ end subroutine HACApK_count_zlntmx
 RECURSIVE subroutine HACApK_generate_zleafmtx(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,nlf,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(*)
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
@@ -2222,8 +2222,8 @@ end subroutine HACApK_generate_zleafmtx
 !***HACApK_count_lntmx
 RECURSIVE subroutine HACApK_count_lntmx(st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -2277,8 +2277,8 @@ end subroutine HACApK_count_lntmx
 RECURSIVE subroutine HACApK_generate_leafmtx(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,nlf,ndpth)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(*)
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
@@ -2337,8 +2337,8 @@ end subroutine HACApK_generate_leafmtx
 !***HACApK_count_olntmx
 RECURSIVE subroutine HACApK_count_olntmx(st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
 	nnsonl=st_cltl%nnson; nnsont=st_cltt%nnson
@@ -2375,8 +2375,8 @@ end subroutine HACApK_count_olntmx
 RECURSIVE subroutine HACApK_generate_oleafmtx(st_leafmtx,st_cltl,st_cltt,param,lpmd,lnmtx,nofc,nffc,nlf)
 	type(st_HACApK_cluster) :: st_cltl,st_cltt
 	type(st_HACApK_leafmtx) :: st_leafmtx(*)
-	integer*4 :: lnmtx(:),lpmd(*)
-	real*8 :: param(*)
+	integer(kind=4) :: lnmtx(:),lpmd(*)
+	real(kind=8) :: param(*)
 
 	ndl=st_cltl%nsize*nffc; ndt=st_cltt%nsize*nffc
 	nstrtl=st_cltl%nstrt; nstrtt=st_cltt%nstrt
@@ -2525,8 +2525,8 @@ endfunction
 !***HACApK_bndbox
 RECURSIVE subroutine HACApK_bndbox(st_clt,zgmid,lod,nofc)
 	type(st_HACApK_cluster) :: st_clt
-	real*8 :: zgmid(nofc,st_clt%ndim)
-	integer*4 :: lod(nofc)
+	real(kind=8) :: zgmid(nofc,st_clt%ndim)
+	integer(kind=4) :: lod(nofc)
 	do ic=1,st_clt%nnson
 		if(ic==1)then; l=1;
 		else; l=l+st_clt%pc_sons(ic-1)%nsize;
@@ -2566,10 +2566,10 @@ end subroutine HACApK_bndbox
 !***HACApK_generate_cbitree
 RECURSIVE subroutine HACApK_generate_cbitree(st_clt,zgmid,param,lpmd,lod,ndpth,ndscd,nsrt,nd,md,ndim,nclst)
 	type(st_HACApK_cluster) :: st_clt
-	real*8 :: zgmid(md,ndim)
-	real*8,dimension(:),allocatable :: zlmin,zlmax
-	integer*4 :: lod(md),lpmd(*)
-	real*8 :: param(*)
+	real(kind=8) :: zgmid(md,ndim)
+	real(kind=8),dimension(:),allocatable :: zlmin,zlmax
+	integer(kind=4) :: lod(md),lpmd(*)
+	real(kind=8) :: param(*)
 	minsz=param(21)
 !	minsz=param(21)/4+1
 	ndpth=ndpth+1
@@ -2630,7 +2630,7 @@ end subroutine HACApK_generate_cbitree
 !***HACApK_cal_matnorm
 subroutine HACApK_cal_matnorm(znrm,st_bemv,lpmd,nd)
 	type(st_HACApK_calc_entry) :: st_bemv
-	integer*4 :: lpmd(:)
+	integer(kind=4) :: lpmd(:)
 	znrm=0.0d0
 	do il=lpmd(6),lpmd(7)
 		zz=HACApK_entry_ij(il,il,st_bemv)
@@ -2642,9 +2642,9 @@ endsubroutine
 subroutine HACApK_impi_allgv(zau,lpmd,nd)
 	use mpi
 !	include 'mpif.h'
-	real*8 :: zau(*)
-	real*8,dimension(:),allocatable :: wws,wwr
-	integer*4 :: lpmd(*),ISTATUS(MPI_STATUS_SIZE),isct(2),irct(2)
+	real(kind=8) :: zau(*)
+	real(kind=8),dimension(:),allocatable :: wws,wwr
+	integer(kind=4) :: lpmd(*),ISTATUS(MPI_STATUS_SIZE),isct(2),irct(2)
 	1000 format(5(a,i10)/)
 	2000 format(5(a,f10.4)/)
 	mpinr=lpmd(3); mpilog=lpmd(4); nrank=lpmd(2); icomm=lpmd(1)
@@ -2670,7 +2670,7 @@ end subroutine
 !***HACApK_gen_mat_plot
 subroutine HACApK_gen_mat_plot(st_leafmtxp,lpmd,lthr)
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
-	integer*4 :: lpmd(1:*),lthr(0:*),kt
+	integer(kind=4) :: lpmd(1:*),lthr(0:*),kt
 	character*32 :: plot
 	mpinr=lpmd(3); mpilog=lpmd(4); nthr=lpmd(20)
 	nlf=st_leafmtxp%nlf

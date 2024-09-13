@@ -23,14 +23,14 @@
 !                                                                     *
 !=====================================================================*
 !***dotp_d
-real*8 function HACApK_dotp_d(nd,za,zb)
-real*8 :: za(nd),zb(nd)
+real(kind=8) function HACApK_dotp_d(nd,za,zb)
+real(kind=8) :: za(nd),zb(nd)
 HACApK_dotp_d=sum(za(:nd)*zb(:nd))
 end function
 !***unrm_d
-real*8 function HACApK_unrm_d(nd,za)
-implicit real*8(a-h,o-z)
-real*8 :: za(:)
+real(kind=8) function HACApK_unrm_d(nd,za)
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: za(:)
 zscl=0.0d0; zzz=1.0d0
 do il=1,nd
 	zza=abs(za(il))
@@ -46,8 +46,8 @@ HACApK_unrm_d=zscl*dsqrt(zzz)
 end function
 !*** maxabsvalloc_d
 subroutine HACApK_maxabsvalloc_d(za,zz,il,nd)
-implicit real*8(a-h,o-z)
-	real*8 :: za(:)
+implicit real(kind=8)(a-h,o-z)
+	real(kind=8) :: za(:)
 	il = 1; zz = dabs(za(1))
 	do it=2,nd
 		if(dabs(za(it)) > zz)then
@@ -57,8 +57,8 @@ implicit real*8(a-h,o-z)
 endsubroutine
 !*** maxabsvallocm_d
 subroutine HACApK_maxabsvallocm_d(za,zz,il,nd,lmask)
-implicit real*8(a-h,o-z)
-real*8 :: za(:)
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: za(:)
 integer lmask(:)
 	il = 0; zz = 0.0d0
 	do it=1,nd
@@ -70,8 +70,8 @@ integer lmask(:)
 endsubroutine
 !*** minabsvalloc_d
 subroutine HACApK_minabsvalloc_d(za,zz,il,nd)
-implicit real*8(a-h,o-z)
-	real*8 za(:)
+implicit real(kind=8)(a-h,o-z)
+	real(kind=8) za(:)
 	il = 1; zz = dabs(za(1))
 	do it=2,nd
 		if(dabs(za(it)) < zz)then
@@ -82,9 +82,9 @@ endsubroutine
 
 !***adot_dsm
 subroutine HACApK_adot_dsm(zau,zaa,zu,ndl,ndt,mdl)
-implicit real*8(a-h,o-z)
-real*8 :: zaa(:,:)
-real*8 :: zu(:),zau(:)
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: zaa(:,:)
+real(kind=8) :: zu(:),zau(:)
 
 zau=0.0d0
 do it=1,ndt
@@ -95,16 +95,16 @@ end subroutine HACApK_adot_dsm
 
 !***adotsub_dsm
 subroutine HACApK_adotsub_dsm(zr,zaa,zu,ndl,ndt,mdl)
-implicit real*8(a-h,o-z)
-real*8 :: zaa(:,:)
-real*8 :: zu(:),zr(:)
-real*8,dimension(:),allocatable :: zau
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: zaa(:,:)
+real(kind=8) :: zu(:),zr(:)
+real(kind=8),dimension(:),allocatable :: zau
 
 interface
 	subroutine HACApK_adot_dsm(zau,zaa,zu,ndl,ndt,mdl)
-		implicit real*8(a-h,o-z)
-		real*8 :: zaa(:,:)
-		real*8 :: zu(:),zau(:)
+		implicit real(kind=8)(a-h,o-z)
+		real(kind=8) :: zaa(:,:)
+		real(kind=8) :: zu(:),zau(:)
 	end subroutine HACApK_adot_dsm
 end interface
 
@@ -117,9 +117,9 @@ end subroutine HACApK_adotsub_dsm
 
 !***adotprt_dsm
 subroutine HACApK_adotprt_dsm(zau,zaa,zu,ndl,ndt,mdl,ils,ile)
-implicit real*8(a-h,o-z)
-real*8 :: zaa(mdl,*)
-real*8 :: zu(ndt),zau(ndl)
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: zaa(mdl,*)
+real(kind=8) :: zu(ndt),zau(ndl)
 zau(:)=0.0d0
 do it=1,ndt
 	zau(ils:ile)=zau(ils:ile)+zaa(ils:ile,it)*zu(it)
@@ -127,10 +127,10 @@ enddo
 end subroutine HACApK_adotprt_dsm
 !***adotsubprt_dsm
 subroutine HACApK_adotsubprt_dsm(zr,zaa,zu,ndl,ndt,mdl,ils,ile)
-implicit real*8(a-h,o-z)
-real*8 :: zaa(mdl,*)
-real*8 :: zu(ndt),zr(ndl)
-real*8,dimension(:),allocatable :: zau
+implicit real(kind=8)(a-h,o-z)
+real(kind=8) :: zaa(mdl,*)
+real(kind=8) :: zu(ndt),zr(ndl)
+real(kind=8),dimension(:),allocatable :: zau
 allocate(zau(ndl))
 ! call adot_dsm(zau,zaa,zu,ndl,ndt,mdl,ils,ile)
 zr(ils:ile)=zr(ils:ile)-zau(ils:ile)
@@ -138,7 +138,7 @@ deallocate(zau)
 end subroutine HACApK_adotsubprt_dsm
 !***strtend_omp
 subroutine HACApK_strtend_omp(j0,j1,ith,nth,ndim)
-implicit real*8(a-h,o-z)
+implicit real(kind=8)(a-h,o-z)
 	inth = ith + nth;		 nth2 = nth + nth
 	ntdim = ndim / nth;		mth = ndim - ntdim*nth
 	ntdim1 = ntdim + 1;		 j0 = 0
