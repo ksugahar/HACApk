@@ -3,17 +3,17 @@ use mpi
 use m_HACApK_base
 use m_HACApK_calc_entry_ij
 
-integer*4 :: N1, N2
-real*4 :: L1 = 0.1000d0, dLx1, dLy1, b = 0.059d0
-real*4 :: L2 = 0.0015d0, dLx2, dLy2
-integer*4 :: nx, ny ,nz
-integer*4 :: i, j
+integer(kind=4) :: N1, N2
+real(kind=8) :: L1 = 0.1000d0, dLx1, dLy1, b = 0.059d0
+real(kind=8) :: L2 = 0.0015d0, dLx2, dLy2
+integer(kind=4) :: nx, ny ,nz
+integer(kind=4) :: i, j
 type(st_HACApK_calc_entry) :: zbemv
 type(st_HACApK_lcontrol) :: st_ctl
 real*8, allocatable :: zab(:,:),zaa(:,:),param(:)
 real*8 :: zeps, znrmmat, ACA_EPS
-integer*4, allocatable :: lodl(:)
-integer*4 :: nd,kmax,icomm,ierr
+integer(kind=4), allocatable :: lodl(:)
+integer(kind=4) :: nd,kmax,icomm,ierr
 real*8,pointer, dimension(:) :: coil_x, coil_y, coil_z
 real*8,pointer, dimension(:) :: eval_x, eval_y, eval_z
 real*8,pointer, dimension(:) :: dx, dy, dz

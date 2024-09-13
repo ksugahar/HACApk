@@ -22,7 +22,7 @@ public :: HACApK_entry_ij
 
 contains
 !***HACApK_entry_ij
-	real(kind=8) function HACApK_entry_ij(i,j,zbemv)
+real(kind=8) function HACApK_entry_ij(i,j,zbemv)
 	integer(kind=4) :: i, j
 	type(st_HACApK_calc_entry) :: zbemv
 	HACApK_entry_ij = loop_Biot_Savart(i,j,zbemv)
@@ -72,7 +72,6 @@ end function HACApK_entry_ij
 		real(kind=8) :: O121, O221, RcosO12, RcosO21, Lx1, Ly1, Lz1, L1
 	real(kind=8), parameter :: pi = 3.14159265358979323846d0
 	real(kind=8), parameter :: eps = 1d-15
-	
 
 		X21 = X2 - X1
 		Y21 = Y2 - Y1
