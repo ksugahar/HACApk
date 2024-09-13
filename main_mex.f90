@@ -31,6 +31,22 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	use my_module
 	implicit none
 
+	integer(kind=4) :: N1, N2
+	real(kind=8) :: L1 = 0.1000d0, dLx1, dLy1, b = 0.059d0
+	real(kind=8) :: L2 = 0.0015d0, dLx2, dLy2
+	integer(kind=4) :: nx, ny ,nz
+	integer(kind=4) :: i, j
+	type(st_HACApK_calc_entry) :: zbemv
+	type(st_HACApK_lcontrol) :: st_ctl
+	real(kind=8), allocatable :: zab(:,:),zaa(:,:),param(:)
+	real(kind=8) :: zeps, znrmmat, ACA_EPS
+	integer(kind=4), allocatable :: lodl(:)
+	integer(kind=4) :: nd,kmax,icomm,ierr
+	real(kind=8), pointer, dimension(:) :: coil_x, coil_y, coil_z
+	real(kind=8), pointer, dimension(:) :: eval_x, eval_y, eval_z
+	real(kind=8), pointer, dimension(:) :: dx, dy, dz
+	real(kind=8) :: Hz
+
 	mwPointer plhs(*), prhs(*)
 	integer nlhs, nrhs
 
@@ -50,21 +66,6 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
 	mwPointer factor_ptr
 
-	integer(kind=4) :: N1, N2
-	real(kind=8) :: L1 = 0.1000d0, dLx1, dLy1, b = 0.059d0
-	real(kind=8) :: L2 = 0.0015d0, dLx2, dLy2
-	integer(kind=4) :: nx, ny ,nz
-	integer(kind=4) :: i, j
-	type(st_HACApK_calc_entry) :: zbemv
-	type(st_HACApK_lcontrol) :: st_ctl
-	real(kind=8), allocatable :: zab(:,:),zaa(:,:),param(:)
-	real(kind=8) :: zeps, znrmmat, ACA_EPS
-	integer(kind=4), allocatable :: lodl(:)
-	integer(kind=4) :: nd,kmax,icomm,ierr
-	real(kind=8), pointer, dimension(:) :: coil_x, coil_y, coil_z
-	real(kind=8), pointer, dimension(:) :: eval_x, eval_y, eval_z
-	real(kind=8), pointer, dimension(:) :: dx, dy, dz
-	real(kind=8) :: Hz
 
 	if(nrhs .ne. 2) then
 		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Two inputs required.')
