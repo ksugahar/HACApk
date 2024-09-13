@@ -123,9 +123,9 @@ end interface
 contains 
 !***HACApK_init
 integer function HACApK_init(nd,st_ctl,st_bemv,icomma)
+	use mpi
 	implicit real*8(a-h,o-z)
-	include 'mpif.h'
-!	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_lcontrol) :: st_ctl
 	integer,optional :: icomma
@@ -217,9 +217,9 @@ endfunction
 
 !***HACApK_finalize
 integer function HACApK_finalize(st_ctl)
+	use mpi
 	implicit real*8(a-h,o-z)
-	include 'mpif.h'
-!	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_lcontrol) :: st_ctl
 	if(st_ctl%param(1)>0) close(st_ctl%lpmd(4))
 	if(st_ctl%lf_umpi==0) call MPI_Finalize (ierr) 
@@ -239,8 +239,8 @@ end subroutine HACApK_chk_st_ctl
 
 !***HACApK_generate_frame_blrleaf
 subroutine HACApK_generate_frame_blrleaf(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,nofc,nffc,ndim)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_cluster) :: st_clt
 	type(st_HACApK_lcontrol) :: st_ctl
 	type(st_HACApK_calc_entry) :: st_bemv
@@ -498,8 +498,8 @@ end subroutine HACApK_generate_frame_blrleaf
 
 !***HACApK_generate_frame_blrmtx
 subroutine HACApK_generate_frame_blrmtx(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,nofc,nffc,ndim)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_cluster) :: st_clt
 	type(st_HACApK_lcontrol) :: st_ctl
 	type(st_HACApK_calc_entry) :: st_bemv
@@ -731,8 +731,8 @@ end subroutine HACApK_generate_frame_blrmtx
 
 !***HACApK_generate_frame_leafmtx_
 subroutine HACApK_generate_frame_leafmtx_(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,nofc,nffc,ndim)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_cluster) :: st_clt
 	type(st_HACApK_lcontrol) :: st_ctl
 	type(st_HACApK_calc_entry) :: st_bemv
@@ -879,8 +879,8 @@ subroutine HACApK_generate_frame_leafmtx_(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,
 
 !***HACApK_generate_frame_leafmtx
 subroutine HACApK_generate_frame_leafmtx(st_leafmtxp,st_bemv,st_ctl,gmid,lnmtx,nofc,nffc,ndim)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_cluster) :: st_clt
 	type(st_HACApK_lcontrol) :: st_ctl
 	type(st_HACApK_calc_entry) :: st_bemv
@@ -1127,8 +1127,8 @@ end subroutine HACApK_accuracy_leafmtx_body
 
 !***HACApK_accuracy_leafmtx
 subroutine HACApK_accuracy_leafmtx(st_leafmtxp,st_bemv,st_ctl,lodl,lodt,lpmd,nofc,nffc)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_calc_entry) :: st_bemv
 	type(st_HACApK_lcontrol) :: st_ctl
@@ -1624,8 +1624,8 @@ end subroutine HACApK_fill_leafmtx
 
 !***HACApK_chk_leafmtx
 subroutine HACApK_chk_leafmtx(st_leafmtxp,st_ctl,lnmtx,nd,mem8)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_lcontrol) :: st_ctl
 	integer :: lnmtx(:)
@@ -1690,8 +1690,8 @@ end subroutine HACApK_chk_leafmtx
 
 !***HACApK_chk_blrmtx
 subroutine HACApK_chk_blrmtx(st_leafmtxp,st_ctl,lnmtx,nd,mem8)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	type(st_HACApK_leafmtxp) :: st_leafmtxp
 	type(st_HACApK_lcontrol) :: st_ctl
 	integer :: lnmtx(:)
@@ -2640,8 +2640,8 @@ endsubroutine
 
 !***HACApK_impi_allgv
 subroutine HACApK_impi_allgv(zau,lpmd,nd)
-	include 'mpif.h'
-!	use mpi
+	use mpi
+!	include 'mpif.h'
 	real*8 :: zau(*)
 	real*8,dimension(:),allocatable :: wws,wwr
 	integer*4 :: lpmd(*),ISTATUS(MPI_STATUS_SIZE),isct(2),irct(2)
