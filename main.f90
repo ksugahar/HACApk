@@ -17,6 +17,7 @@ integer(kind=4) :: nd,kmax,icomm,ierr
 real*8,pointer, dimension(:) :: coil_x, coil_y, coil_z
 real*8,pointer, dimension(:) :: eval_x, eval_y, eval_z
 real*8,pointer, dimension(:) :: dx, dy, dz
+real(kind=8) :: Hz
 
 !  各コイルの重心座標
 N1 = 61

@@ -56,7 +56,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	integer mxIsNumeric
 	mwPointer mxGetM, mxGetN
 
-	mwPointer x_ptr, y_ptr
+	mwPointer x_ptr, y_ptr, dx_ptr, dy_ptr, dz_ptr
 	mwPointer mrows, ncols
 	mwSize size
 
@@ -66,9 +66,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
 	mwPointer factor_ptr
 
-
-	if(nrhs .ne. 2) then
-		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Two inputs required.')
+	if(nrhs .ne. 5) then
+		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Five inputs required.')
 	elseif(nlhs .ne. 1) then
 		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nOutput', 'One output required.')
 	endif
@@ -105,6 +104,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 			coil_z(i) = b/2
 		end do
 	end do
+	write(1,*) coil_x, coil_y, coil_z
 
 	N2 = 100
 	allocate(zbemv%eval_x(N2*N2))
@@ -128,9 +128,13 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	allocate(zbemv%dz(4))
 	dx=>zbemv%dx(:); dy=>zbemv%dy; dz=>zbemv%dz
 
-	dx = (/ -1.d0, 1.d0, 1.d0,-1.d0/)*dLx1/2.0
-	dy = (/ -1.d0,-1.d0, 1.d0, 1.d0/)*dLy1/2.0
-	dz = (/ -0.d0, 0.d0, 0.d0, 0.d0/)
+	dx_ptr = mxGetDoubles(prhs(3))
+	dy_ptr = mxGetDoubles(prhs(4))
+	dz_ptr = mxGetDoubles(prhs(5))
+
+	call mxCopyPtrToReal8(dx_ptr, dx, 4)
+	call mxCopyPtrToReal8(dy_ptr, dy, 4)
+	call mxCopyPtrToReal8(dz_ptr, dz, 4)
 
 	i = 20
 	j = 40
