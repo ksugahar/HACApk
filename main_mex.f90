@@ -30,8 +30,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
 	if(nrhs .ne. 9) then
 		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Nine inputs required.')
-!	elseif(nlhs .ne. 1) then
-!		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nOutput', 'One output required.')
+	elseif(nlhs .ne. 1) then
+		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nOutput', 'One output required.')
 	endif
 	
 	n1 = mxGetN(prhs(1))
@@ -67,10 +67,6 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	i = 20
 	j = 40
 	Hz = HACApK_entry_ij(i, j, zbemv)
-
-!	open(unit=1, file='result.txt', status='new', action='write')
-!	write(1,*) Hz
-!	close(unit=1, status='keep')
 
 	plhs(1) = mxCreateDoubleMatrix(1, 1, 0)
 	call mxCopyReal8ToPtr(Hz, mxGetDoubles(plhs(1)), 1)
