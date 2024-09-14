@@ -1,51 +1,22 @@
 #include "fintrf.h"
 
-module my_module
-	implicit none
-	private
-
-	public :: parameter, timestwo
-
-	type :: parameter
-		real(kind=8) :: factor
-	end type parameter
-
-	contains
-
-	subroutine timestwo(y, x, size, p)
-		real(kind=8), intent(in)  :: x(*)
-		real(kind=8), intent(out) :: y(*)
-		type(parameter), intent(in) :: p
-		integer n, size
-		do n = 1, size
-			y(n) = p%factor * x(n)
-		end do
-
-	end subroutine timestwo
-end module my_module
-
 subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	use mpi
 	use m_HACApK_base
 	use m_HACApK_calc_entry_ij
-	use my_module
 	implicit none
 
-	integer(kind=4) :: N1, N2
-	real(kind=8) :: L1 = 0.1000d0, dLx1, dLy1, b = 0.059d0
-	real(kind=8) :: L2 = 0.0015d0, dLx2, dLy2
-	integer(kind=4) :: nx, ny ,nz
-	integer(kind=4) :: i, j
 	type(st_HACApK_calc_entry) :: zbemv
 	type(st_HACApK_lcontrol) :: st_ctl
 	real(kind=8), allocatable :: zab(:,:),zaa(:,:),param(:)
 	real(kind=8) :: zeps, znrmmat, ACA_EPS
 	integer(kind=4), allocatable :: lodl(:)
-	integer(kind=4) :: nd,kmax,icomm,ierr
-	real(kind=8), pointer, dimension(:) :: coil_x, coil_y, coil_z
-	real(kind=8), pointer, dimension(:) :: eval_x, eval_y, eval_z
-	real(kind=8), pointer, dimension(:) :: dx, dy, dz
+	integer(kind=4) :: nd, kmax, icomm, ierr
+!	real(kind=8), pointer, dimension(:) :: coil_x, coil_y, coil_z
+!	real(kind=8), pointer, dimension(:) :: eval_x, eval_y, eval_z
+!	real(kind=8), pointer, dimension(:) :: dx, dy, dz
 	real(kind=8) :: Hz
+	integer(kind=4) :: i, j
 
 	mwPointer plhs(*), prhs(*)
 	integer nlhs, nrhs
@@ -56,97 +27,67 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 	integer mxIsNumeric
 	mwPointer mxGetM, mxGetN
 
-	mwPointer x_ptr, y_ptr, dx_ptr, dy_ptr, dz_ptr
-	mwPointer mrows, ncols
-	mwSize size
+	mwPointer n1, m1, n4, m4, n7, m7
+	mwSize nm1, nm4, nm7
 
-	real(kind=8), allocatable :: x(:)
 	real(kind=8), allocatable :: y(:)
-	type(parameter) :: p
+	mwPointer y_ptr
 
-	mwPointer factor_ptr
-
-	if(nrhs .ne. 5) then
-		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Five inputs required.')
-	elseif(nlhs .ne. 1) then
-		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nOutput', 'One output required.')
+	if(nrhs .ne. 9) then
+		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nInput', 'Nine inputs required.')
+!	elseif(nlhs .ne. 1) then
+!		call mexErrMsgIdAndTxt ('MATLAB:timestwo:nOutput', 'One output required.')
 	endif
 	
-	mrows = mxGetM(prhs(1))
-	ncols = mxGetN(prhs(1))
-	size = mrows*ncols
+	n1 = mxGetN(prhs(1))
+	m1 = mxGetM(prhs(1))
+	nm1 = n1*m1
+	allocate(zbemv%coil_x(nm1))
+	allocate(zbemv%coil_y(nm1))
+	allocate(zbemv%coil_z(nm1))
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(1)), zbemv%coil_x, nm1)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(2)), zbemv%coil_y, nm1)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(3)), zbemv%coil_z, nm1)
+	write(2,*) nm1
+	write(2,*) zbemv%coil_x
 
-	allocate(x(size))
-	allocate(y(size))
+	n4 = mxGetN(prhs(4))
+	m4 = mxGetM(prhs(4))
+	nm4 = n4*m4
+	allocate(zbemv%eval_x(nm4))
+	allocate(zbemv%eval_y(nm4))
+	allocate(zbemv%eval_z(nm4))
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(4)), zbemv%eval_x, nm4)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(5)), zbemv%eval_y, nm4)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(6)), zbemv%eval_z, nm4)
+	write(3,*) nm4
+	write(3,*) zbemv%eval_x
 
-	x_ptr = mxGetDoubles(prhs(1))
-	call mxCopyPtrToReal8(x_ptr, x, size)
-
-	factor_ptr = mxGetDoubles(prhs(2))
-	call mxCopyPtrToReal8(factor_ptr, p%factor, 1)
-
-	call timestwo(y, x, size, p)
-
-	N1 = 61
-	allocate(zbemv%coil_x(N1*N1))
-	allocate(zbemv%coil_y(N1*N1))
-	allocate(zbemv%coil_z(N1*N1))
-	coil_x=>zbemv%coil_x(:); coil_y=>zbemv%coil_y; coil_z=>zbemv%coil_z
-
-	dLx1 = 2.0d0*L1/dble(N1-1)
-	dLy1 = 2.0d0*L1/dble(N1-1)
-	i = 0
-	do ny = 1, N1
-		do nx = 1, N1
-			i = i + 1
-			coil_x(i) = -L1 + dble(nx-1)*dLx1
-			coil_y(i) = -L1 + dble(ny-1)*dLy1
-			coil_z(i) = b/2
-		end do
-	end do
-	write(1,*) coil_x, coil_y, coil_z
-
-	N2 = 100
-	allocate(zbemv%eval_x(N2*N2))
-	allocate(zbemv%eval_y(N2*N2))
-	allocate(zbemv%eval_z(N2*N2))
-	eval_x=>zbemv%eval_x; eval_y=>zbemv%eval_y; eval_z=>zbemv%eval_z
-	dLx2 = 2.0d0*L2/dble(N2-1)
-	dLy2 = 2.0d0*L2/dble(N2-1)
-	j = 0
-	do ny = 1, N2
-		do nx = 1, N2
-			j = j + 1
-			eval_x(j) = -L2 + dble(nx-1)*dLx2
-			eval_y(j) = -L2 + dble(ny-1)*dLy2
-			eval_z(j) = 0
-		end do
-	end do
-
-	allocate(zbemv%dx(4))
-	allocate(zbemv%dy(4))
-	allocate(zbemv%dz(4))
-	dx=>zbemv%dx(:); dy=>zbemv%dy; dz=>zbemv%dz
-
-	dx_ptr = mxGetDoubles(prhs(3))
-	dy_ptr = mxGetDoubles(prhs(4))
-	dz_ptr = mxGetDoubles(prhs(5))
-
-	call mxCopyPtrToReal8(dx_ptr, dx, 4)
-	call mxCopyPtrToReal8(dy_ptr, dy, 4)
-	call mxCopyPtrToReal8(dz_ptr, dz, 4)
+	n7 = mxGetN(prhs(7))
+	m7 = mxGetM(prhs(7))
+	nm7 = n7*m7
+	allocate(zbemv%dx(nm7))
+	allocate(zbemv%dy(nm7))
+	allocate(zbemv%dz(nm7))
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(7)), zbemv%dx, nm7)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(8)), zbemv%dy, nm7)
+	call mxCopyPtrToReal8(mxGetDoubles(prhs(9)), zbemv%dz, nm7)
+	write(4,*) nm7
+	write(4,*) zbemv%dx
 
 	i = 20
 	j = 40
 	Hz = HACApK_entry_ij(i, j, zbemv)
-	write(1,*) Hz
 
-	plhs(1) = mxCreateDoubleMatrix(mrows, ncols, 0)
-	y_ptr = mxGetDoubles(plhs(1))
-	call mxCopyReal8ToPtr(y, y_ptr, size)
-	
-	deallocate(x)
-	deallocate(y)
+!	open(unit=1, file='result.txt', status='new', action='write')
+	write(1,*) Hz
+!	close(unit=1, status='keep')
+
+!	plhs(1) = mxCreateDoubleMatrix(m1, n1, 0)
+!	y_ptr = mxGetDoubles(plhs(1))
+!	call mxCopyReal8ToPtr(Hz, y_ptr, 1)
+!	deallocate(y)
+
 return
 end
 
