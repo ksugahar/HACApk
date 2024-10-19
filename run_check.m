@@ -3,7 +3,7 @@ close all;
 format long
 
 L1 = 0.1000;
-N1 = 61;
+N1 = 60;
 b = 0.059;
 
 L2 = 0.0015;
@@ -26,7 +26,6 @@ dx = [ -1.0, 1.0, 1.0,-1.0]*dLx1/2.0;
 dy = [ -1.0,-1.0, 1.0, 1.0]*dLy1/2.0;
 dz = [ -0.0, 0.0, 0.0, 0.0];
 
-a = main_mex(coil_x, coil_y, coil_z, eval_x, eval_y, eval_z, dx, dy, dz);
+[a,b] = main_mex(coil_x, coil_y, coil_z, eval_x, eval_y, eval_z, dx, dy, dz);
 
 disp(a)
-
